@@ -27,4 +27,3 @@ describe('PostTweetUseCase', () => {
     await expect(uc.execute(long)).rejects.toThrow('Tweet exceeds 280 characters');
   });
 });
-

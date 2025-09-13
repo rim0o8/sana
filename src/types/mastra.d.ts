@@ -3,4 +3,3 @@ declare module 'mastra' {
   export const tool: any;
   export const z: any;
 }
-

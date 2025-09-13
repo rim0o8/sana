@@ -45,13 +45,13 @@ function parseArgs(argv: string[]): Args {
 }
 
 async function main() {
-  const env = loadEnv();
+  const _env = loadEnv();
   const logger = createLogger({ name: 'tweet-cli' });
   const args = parseArgs(process.argv);
 
   if (!args.topic) {
     console.error(
-      'Usage: dev -- --topic "your topic" [--style tech|informative|marketing] [--hashtags on|off] [--post]'
+      'Usage: dev -- --topic "your topic" [--style tech|informative|marketing] [--hashtags on|off] [--post]',
     );
     process.exit(1);
   }
@@ -75,7 +75,7 @@ async function main() {
 
   logger.info(
     { generatedText: result.generatedText, posted: result.posted },
-    result.posted ? 'Tweet posted' : 'Dry run complete'
+    result.posted ? 'Tweet posted' : 'Dry run complete',
   );
   if (!result.posted) {
     console.log('\nGenerated tweet (not posted):');

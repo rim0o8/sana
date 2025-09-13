@@ -48,7 +48,7 @@ export function buildTweetAgent(deps: { twitter: ITwitterClient; logger: Logger 
           'If a call-to-action makes sense, add one short CTA.',
           'Do not include backticks or quotes around the tweet.',
         ].join(' '),
-        model: openai('gpt-4o-mini'),
+        model: openai('gpt-4o-mini') as any,
       });
     }
     let raw: any;
@@ -58,7 +58,7 @@ export function buildTweetAgent(deps: { twitter: ITwitterClient; logger: Logger 
       // Surface a clearer error if input shape was wrong
       if (typeof e?.message === 'string' && /messages\.map is not a function/i.test(e.message)) {
         throw new Error(
-          'Agent.generate failed: invalid messages parameter shape. This is a bug in our agent wrapper.'
+          'Agent.generate failed: invalid messages parameter shape. This is a bug in our agent wrapper.',
         );
       }
       throw e;
@@ -88,5 +88,3 @@ function normalizeAgentOutput(raw: any): string {
   }
   return String(raw);
 }
-
-// Removed offline naive generator to enforce real agent generation
