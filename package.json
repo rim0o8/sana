@@ -1,0 +1,33 @@
+{
+  "name": "sana",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/presentation/cli/index.ts --",
+    "start": "node dist/presentation/cli/index.js",
+    "test": "vitest run --pool=forks",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mastra": "^0.2.0",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.3.0",
+    "twitter-api-v2": "^1.16.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.11.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.0.5"
+  }
+}
