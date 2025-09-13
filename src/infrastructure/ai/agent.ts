@@ -19,11 +19,7 @@ export type TweetAgentResult = {
   posted?: { id: string; url?: string };
 };
 
-export function buildTweetAgent(deps: {
-  twitter: ITwitterClient;
-  logger: Logger;
-  openaiApiKey?: string;
-}) {
+export function buildTweetAgent(deps: { twitter: ITwitterClient; logger: Logger }) {
   const postTweetUseCase = new PostTweetUseCase(deps.twitter);
   let agent: any = null;
 

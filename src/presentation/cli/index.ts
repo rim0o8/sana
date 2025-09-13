@@ -64,7 +64,7 @@ async function main() {
     logger,
   });
 
-  const { run } = buildTweetAgent({ twitter, logger, openaiApiKey: env.OPENAI_API_KEY });
+  const { run } = buildTweetAgent({ twitter, logger });
 
   const includeHashtags = args.hashtags ? args.hashtags !== 'off' : false;
   const style = (args.style as any) ?? undefined;

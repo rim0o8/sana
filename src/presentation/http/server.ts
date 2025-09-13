@@ -47,7 +47,6 @@ export function createServer(deps: Dependencies) {
     buildTweetAgent({
       twitter: deps.twitter,
       logger,
-      openaiApiKey: process.env.OPENAI_API_KEY,
     }).run;
 
   app.post('/tweets/agent', async (request, reply) => {
