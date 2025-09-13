@@ -40,37 +40,34 @@ export function buildTweetAgent(deps: {
 
     // Mastra agent output shape can vary; normalize to string
     let generated = '';
-    // In dry-run mode, avoid any network/model calls and use offline generator
-    if (input.dryRun) {
-      generated = naiveOfflineTweet(prompt, { maxChars });
-    } else if (deps.openaiApiKey) {
-      // Try Mastra core agent; gracefully fallback if unavailable
-      try {
-        if (!agent) {
-          const { Agent } = await import('@mastra/core/agent');
-          const { openai } = await import('@ai-sdk/openai');
-          agent = new Agent({
-            name: 'Tweety',
-            instructions: [
-              'You are an expert social media copywriter.',
-              'Write concise, engaging tweets that fit in 280 characters.',
-              'Prefer clear language; avoid hashtags unless asked.',
-              'If a call-to-action makes sense, add one short CTA.',
-              'Do not include backticks or quotes around the tweet.',
-            ].join(' '),
-            model: openai('gpt-4o-mini'),
-          });
-        }
-        const raw = await (agent as any).generate?.({ messages: prompt });
-        generated = normalizeAgentOutput(raw).trim();
-      } catch {
-        // Fallback when Mastra core or model provider isn't installed
-        generated = naiveOfflineTweet(prompt, { maxChars });
-      }
-    } else {
-      // Offline fallback generator
-      generated = naiveOfflineTweet(prompt, { maxChars });
+    if (!agent) {
+      const { Agent } = await import('@mastra/core/agent');
+      const { openai } = await import('@ai-sdk/openai');
+      agent = new Agent({
+        name: 'Tweety',
+        instructions: [
+          'You are an expert social media copywriter.',
+          'Write concise, engaging tweets that fit in 280 characters.',
+          'Prefer clear language; avoid hashtags unless asked.',
+          'If a call-to-action makes sense, add one short CTA.',
+          'Do not include backticks or quotes around the tweet.',
+        ].join(' '),
+        model: openai('gpt-4o-mini'),
+      });
     }
+    let raw: any;
+    try {
+      raw = await (agent as any).generate?.(prompt);
+    } catch (e: any) {
+      // Surface a clearer error if input shape was wrong
+      if (typeof e?.message === 'string' && /messages\.map is not a function/i.test(e.message)) {
+        throw new Error(
+          'Agent.generate failed: invalid messages parameter shape. This is a bug in our agent wrapper.'
+        );
+      }
+      throw e;
+    }
+    generated = normalizeAgentOutput(raw).trim();
     const text = generated;
 
     deps.logger.info({ text, length: text.length }, 'Generated tweet');
@@ -96,10 +93,4 @@ function normalizeAgentOutput(raw: any): string {
   return String(raw);
 }
 
-function naiveOfflineTweet(prompt: string, opts: { maxChars: number }): string {
-  // Extract a simple topic heuristic
-  const topicMatch = /Topic:\s*([^.]*)/i.exec(prompt);
-  const topic = topicMatch ? topicMatch[1].trim() : 'your topic';
-  const base = `${topic} — new update available. Try it now!`;
-  return base.slice(0, Math.max(0, opts.maxChars));
-}
+// Removed offline naive generator to enforce real agent generation

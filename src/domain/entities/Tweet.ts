@@ -4,4 +4,3 @@ export type Tweet = {
   createdAt: Date;
   url?: string;
 };
-

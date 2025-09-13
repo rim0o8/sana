@@ -1,6 +1,6 @@
 import { TwitterApi } from 'twitter-api-v2';
-import type { ITwitterClient } from '../../domain/repositories/TwitterClient';
 import type { Tweet } from '../../domain/entities/Tweet';
+import type { ITwitterClient } from '../../domain/repositories/TwitterClient';
 import type { Logger } from '../logging/logger';
 
 export type TwitterApiClientOptions = {
@@ -35,4 +35,3 @@ export class TwitterApiClient implements ITwitterClient {
     return { id, text, createdAt: new Date(), url };
   }
 }
-

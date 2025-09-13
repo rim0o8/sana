@@ -1,13 +1,13 @@
-## Mastra Tweet Agent (Minimal)
+# Mastra Tweet Agent (Minimal)
 
 Mastra を使ったツイート対応 AI エージェントの最小構成サンプルです。クリーンアーキテクチャで構成し、ロガー、環境変数の検証、Twitter(X) API アダプタ、コアユースケースのユニットテストを含みます。
 
-### 要件
+## 要件
 
 - Node.js >= 20
-- Bun 1.1+（推奨）または pnpm/npm/yarn のいずれか
+- pnpm（推奨）または npm/yarn のいずれか
 
-### ディレクトリ構成
+## ディレクトリ構成
 
 - `src/domain`: エンティティとポート(インターフェース)
 - `src/application`: ユースケース（純粋なビジネスロジック）
@@ -15,11 +15,11 @@ Mastra を使ったツイート対応 AI エージェントの最小構成サン
 - `src/presentation/cli`: CLI エントリポイント
 - `tests`: ユニットテスト（Vitest）
 
-### セットアップ
+## セットアップ
 
 1. `.env.example` をコピーして `.env` を作成し、値を設定します。
 
-```
+```plain
 OPENAI_API_KEY=sk-...            # 任意（未設定でもドライラン可）
 TWITTER_APP_KEY=...              # X アプリの API Key（投稿する場合に必要）
 TWITTER_APP_SECRET=...           # X アプリの API Secret
@@ -28,47 +28,47 @@ TWITTER_ACCESS_SECRET=...        # X ユーザーの Access Secret
 LOG_LEVEL=info                   # 任意（pino ログレベル）
 ```
 
-2. 依存関係をインストールします。
+1. 依存関係をインストールします。
 
-```
-bun install
+```sh
+pnpm install
 ```
 
 > pnpm を使う場合: `pnpm i`
 
-3. 実行（デフォルトはドライラン）
+1. 実行（デフォルトはドライラン）
 
-```
+```sh
 # 生成のみ（投稿しない）
-bun run dev -- --topic "新機能を公開しました" --style tech --hashtags off
+pnpm dev -- --topic "新機能を公開しました" --style tech --hashtags off
 
 # 実際に投稿（--post を付ける）
 # 事前に X アプリの権限が Write になっていることと、.env のトークンが正しいことを確認してください
-bun run dev -- --topic "新機能を公開しました" --post
+pnpm dev -- --topic "新機能を公開しました" --post
 ```
 
-### 動作のポイント
+## 動作のポイント
 
 - デフォルトはドライラン（投稿しない）です。実投稿は `--post` を付与します。
 - `OPENAI_API_KEY` が未設定のときは、オフラインの簡易ジェネレータでツイート文を生成します。
 - `OPENAI_API_KEY` を設定し、`@mastra/core` が導入されていれば、モデル（OpenAI）を用いた生成に切り替わります。
 - 投稿は `twitter-api-v2`（OAuth 1.0a ユーザーコンテキスト）で行います。X 側アプリの権限が `Read and write` である必要があります。
 
-### スクリプト
+## スクリプト
 
-- `bun run dev` — CLI を起動（引数は `--` の後に指定）
-- `bun run build` — TypeScript をビルド
-- `bun start` — ビルド成果物から起動
-- `bun run test` — ユニットテスト（Vitest）
-- `bun run lint` — ESLint（Flat Config）
+- `pnpm dev` — CLI を起動（引数は `--` の後に指定）
+- `pnpm build` — TypeScript をビルド
+- `pnpm start` — ビルド成果物から起動
+- `pnpm test` — ユニットテスト（Vitest）
+- `pnpm lint` — ESLint（Flat Config）
 
-### テスト
+## テスト
 
+```sh
+pnpm test
 ```
-bun run test
-```
 
-### 実装メモ
+## 実装メモ
 
 - `PostTweetUseCase` は 280 文字超過を防ぐための簡易チェックを実装しています。
 - Mastra の API/設定はバージョンにより変わる可能性があります。必要に応じて `src/infrastructure/ai/agent.ts` を調整してください。

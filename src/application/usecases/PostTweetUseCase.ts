@@ -1,5 +1,5 @@
-import type { ITwitterClient } from "../../domain/repositories/TwitterClient";
-import type { Tweet } from "../../domain/entities/Tweet";
+import type { Tweet } from '../../domain/entities/Tweet';
+import type { ITwitterClient } from '../../domain/repositories/TwitterClient';
 
 export class PostTweetUseCase {
   constructor(private readonly twitter: ITwitterClient) {}
@@ -13,4 +13,3 @@ export class PostTweetUseCase {
     return this.twitter.postTweet(trimmed);
   }
 }
-
